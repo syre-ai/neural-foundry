@@ -175,9 +175,78 @@ nf complete m01_first_resonance # Claim rewards
 
 ---
 
+## Phase 3: Mission 02 - "Signal in the Noise"
+
+### Mission Design
+
+| Attribute | Value |
+|-----------|-------|
+| ID | m02_signal_noise |
+| Tier | Apprentice |
+| XP Reward | 150 |
+| ART Model | FuzzyART |
+| Claude Skill | Iterative editing (edit → test → refine) |
+
+### Learning Objectives
+
+1. Understand that first attempts often fail
+2. Learn the iterative debugging workflow
+3. Master FuzzyART's three parameters (rho, alpha, beta)
+4. Connect to real-world ML: working with embeddings
+
+### Dataset
+
+- 100 synthetic embeddings, 16 dimensions
+- 5 true clusters (15 samples each) + 25 noise points
+- Pre-normalized to [0, 1] range
+- Generated with seed 42 for reproducibility
+
+### Checkpoints
+
+1. **Load the Embeddings** - Use np.load() for .npy files
+2. **First Attempt** - Run FuzzyART, observe poor results
+3. **Diagnose Issues** - Add diagnostic output
+4. **Iterate to Success** - Achieve >75% separation score
+
+### Design Philosophy
+
+Mission intentionally starts with a broken starter template to teach:
+- Reading error messages
+- Asking Claude for debugging help
+- Iterating on parameters until success
+
+### FuzzyART vs ART1
+
+| Aspect | ART1 | FuzzyART |
+|--------|------|----------|
+| Data type | Binary only | Continuous [0,1] |
+| Parameters | rho, L | rho, alpha, beta |
+| Use case | Pattern matching | Clustering embeddings |
+
+---
+
+## Git Commits This Session
+
+| Hash | Message |
+|------|---------|
+| 07d9b23 | Initial commit: Neural Foundry project scaffold + Mission 01 |
+| 3d4d67a | Add Mission 02: Signal in the Noise |
+
+---
+
+## Session Summary
+
+- **Duration:** ~1 hour
+- **Missions Built:** 2 (First Resonance, Signal in the Noise)
+- **Total XP Available:** 250
+- **Progress Tracking:** Git + devlogs initialized
+
+---
+
 ## Next Session Plans
 
-- [ ] Design Mission 02 (likely FuzzyART clustering)
-- [ ] Add more Apprentice missions
+- [ ] Play through Mission 02 to validate difficulty
+- [ ] Add Mission 03 (perhaps ARTMAP for supervised learning?)
+- [ ] Add more Apprentice missions to reach 5 total
+- [ ] Consider adding cluster visualization
 - [ ] Implement models/ wrappers for easier ART usage
-- [ ] Consider adding visualization of clusters

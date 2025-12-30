@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m neural_foundry:*)",
+      "Bash(source:*)",
+      "Bash(python train.py:*)",
+      "Bash(nf check:*)",
+      "Bash(nf complete:*)",
+      "Bash(nf status:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

@@ -225,28 +225,62 @@ Mission intentionally starts with a broken starter template to teach:
 
 ---
 
+## Phase 4: Mission 02 Playtest
+
+### Iteration Log
+
+| Attempt | rho | Clusters | Score | Issue |
+|---------|-----|----------|-------|-------|
+| 1 | 0.5 | - | ERROR | Missing `prepare_data()` call |
+| 2 | 0.5 | 15 | 61% | Too many clusters |
+| 3 | 0.3 | 6 | 41% | Too few, labels mixing |
+| 4 | 0.4 | 10 | 51% | Still mixing |
+| 5 | 0.6 | 18 | **79%** | **SUCCESS** |
+
+### Key Discovery: Complement Coding
+
+FuzzyART requires complement coding - data must be transformed:
+- Original: `[x1, x2, ..., xn]`
+- Complement coded: `[x1, x2, ..., xn, 1-x1, 1-x2, ..., 1-xn]`
+
+The `model.prepare_data(X)` method handles this automatically.
+This doubled our dimensions: 16 → 32.
+
+### Playtest Verdict
+
+Mission works as designed:
+- First attempt fails with clear error message
+- Requires 4-5 iterations to find optimal parameters
+- Teaches debugging and iterative refinement
+- Difficulty appropriate for Apprentice tier
+
+---
+
 ## Git Commits This Session
 
 | Hash | Message |
 |------|---------|
 | 07d9b23 | Initial commit: Neural Foundry project scaffold + Mission 01 |
 | 3d4d67a | Add Mission 02: Signal in the Noise |
+| 8aef9dd | Update devlog with Mission 02 design notes |
 
 ---
 
 ## Session Summary
 
-- **Duration:** ~1 hour
+- **Duration:** ~1.5 hours
 - **Missions Built:** 2 (First Resonance, Signal in the Noise)
-- **Total XP Available:** 250
+- **Missions Playtested:** 2
+- **Total XP Earned:** 250
+- **Player Status:** Apprentice, 2/5 missions to Journeyman
 - **Progress Tracking:** Git + devlogs initialized
 
 ---
 
 ## Next Session Plans
 
-- [ ] Play through Mission 02 to validate difficulty
-- [ ] Add Mission 03 (perhaps ARTMAP for supervised learning?)
+- [x] Play through Mission 02 to validate difficulty
+- [ ] Add Mission 03
 - [ ] Add more Apprentice missions to reach 5 total
 - [ ] Consider adding cluster visualization
 - [ ] Implement models/ wrappers for easier ART usage

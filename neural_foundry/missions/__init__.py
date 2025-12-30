@@ -14,6 +14,7 @@ from neural_foundry.missions.base import (
 # Import missions to trigger registration
 from neural_foundry.missions.apprentice.m01_first_resonance import FirstResonanceMission
 from neural_foundry.missions.apprentice.m02_signal_noise import SignalNoiseMission
+from neural_foundry.missions.apprentice.m03_mappers_path import MappersPathMission
 
 __all__ = [
     "Mission",
@@ -26,4 +27,5 @@ __all__ = [
     "get_missions_for_tier",
     "FirstResonanceMission",
     "SignalNoiseMission",
+    "MappersPathMission",
 ]

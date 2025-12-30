@@ -13,6 +13,7 @@ from neural_foundry.missions.base import (
 
 # Import missions to trigger registration
 from neural_foundry.missions.apprentice.m01_first_resonance import FirstResonanceMission
+from neural_foundry.missions.apprentice.m02_signal_noise import SignalNoiseMission
 
 __all__ = [
     "Mission",
@@ -24,4 +25,5 @@ __all__ = [
     "get_all_missions",
     "get_missions_for_tier",
     "FirstResonanceMission",
+    "SignalNoiseMission",
 ]

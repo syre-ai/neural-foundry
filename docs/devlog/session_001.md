@@ -266,21 +266,112 @@ Mission works as designed:
 
 ---
 
+## Phase 5: Mission 03 - "The Mapper's Path"
+
+### Mission Design
+
+| Attribute | Value |
+|-----------|-------|
+| ID | m03_mappers_path |
+| Tier | Apprentice |
+| XP Reward | 200 |
+| ART Model | SimpleARTMAP + Full ARTMAP |
+| Claude Skill | Code generation |
+
+### Key Learning: SimpleARTMAP vs Full ARTMAP
+
+User requested both implementations to understand the difference:
+
+**SimpleARTMAP:**
+- Architecture: `Input → FuzzyART → cluster → label_lookup → class`
+- One ART module (ART_a) for input clustering
+- Labels directly mapped to clusters
+- Best for: discrete classification
+
+**Full ARTMAP:**
+- Architecture: `Input → ART_a ↔ MapField ↔ ART_b ← Labels`
+- Two ART modules (ART_a for input, ART_b for output)
+- Both input and output spaces are clustered
+- Best for: continuous outputs, discovering output structure
+
+### Results
+
+| Metric | SimpleARTMAP | Full ARTMAP |
+|--------|--------------|-------------|
+| Input clusters | 9 | 9 |
+| Output clusters | N/A | 4 |
+| Test accuracy | 100% | 100% |
+
+### Bugs Fixed During Playtest
+
+1. **Data normalization:** `prepare_data()` must process train+test together
+2. **ARTMAP predict:** Returns cluster IDs, need mapping back to original labels
+
+---
+
+## Git Commits This Session
+
+| Hash | Message |
+|------|---------|
+| 07d9b23 | Initial commit: Neural Foundry project scaffold + Mission 01 |
+| 3d4d67a | Add Mission 02: Signal in the Noise |
+| 8aef9dd | Update devlog with Mission 02 design notes |
+| e157c10 | Add Mission 02 playtest results to devlog |
+| 6455d74 | Add Mission 03: The Mapper's Path |
+
+---
+
 ## Session Summary
 
-- **Duration:** ~1.5 hours
-- **Missions Built:** 2 (First Resonance, Signal in the Noise)
-- **Missions Playtested:** 2
-- **Total XP Earned:** 250
-- **Player Status:** Apprentice, 2/5 missions to Journeyman
-- **Progress Tracking:** Git + devlogs initialized
+- **Duration:** ~2.5 hours
+- **Missions Built:** 3 (First Resonance, Signal in the Noise, The Mapper's Path)
+- **Missions Playtested:** 3
+- **Total XP Earned:** 450
+- **Player Status:** Apprentice, 3/5 missions to Journeyman
+- **Progress Tracking:** Git + devlogs
+
+### ART Models Covered
+
+| Model | Mission | Key Concepts |
+|-------|---------|--------------|
+| ART1 | M01 | Binary patterns, vigilance tuning |
+| FuzzyART | M02 | Continuous data, complement coding |
+| SimpleARTMAP | M03 | Supervised classification |
+| Full ARTMAP | M03 | Dual-module architecture |
+
+### Claude Code Skills Taught
+
+| Mission | Skill | Teaching Method |
+|---------|-------|-----------------|
+| M01 | File reading | Explore unknown data formats |
+| M02 | Iterative editing | Edit → test → refine cycle |
+| M03 | Code generation | Ask Claude to write implementations |
 
 ---
 
 ## Next Session Plans
 
 - [x] Play through Mission 02 to validate difficulty
-- [ ] Add Mission 03
-- [ ] Add more Apprentice missions to reach 5 total
+- [x] Add Mission 03
+- [ ] Add Missions 04 & 05 to complete Apprentice tier
 - [ ] Consider adding cluster visualization
 - [ ] Implement models/ wrappers for easier ART usage
+
+---
+
+## How to Resume
+
+```bash
+# Navigate to project
+cd /home/syre/projects/neural-foundry
+
+# Activate environment
+source .venv/bin/activate
+
+# Resume Claude Code conversation
+claude --resume
+
+# Check game status
+nf status
+nf missions
+```

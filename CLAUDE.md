@@ -1,73 +1,98 @@
-# Neural Foundry
+# Claude Foundry
 
-A CLI game that teaches people how to use Claude Code effectively through hands-on missions using AdaptiveResonanceLib (ART neural networks).
+A gamified framework for teaching Claude Code through hands-on missions.
 
 ## Project Overview
 
-Neural Foundry gamifies learning Claude Code workflows by having players train and work with ART neural networks. Each mission teaches a real Claude Code pattern (inspired by Karpathy's "JIT your work" philosophy) while building actual ML models.
+Claude Foundry is an extensible learning platform with pluggable **tracks**. Each track is a themed collection of missions that teach Claude Code skills through domain-specific challenges.
 
-## Core Concepts
+## Architecture
 
-### Tier System
-- **Apprentice**: Basic Claude Code commands, simple ART1 models
-- **Journeyman**: Multi-file workflows, FuzzyART clustering
-- **Artisan**: Complex pipelines, ARTMAP supervised learning
-- **Master**: Advanced patterns, ensemble ART systems
+### Core Engine (`foundry/engine/`)
 
-### Mission Structure
-Each mission:
-1. Presents a neural network challenge using artlib
-2. Teaches a specific Claude Code workflow pattern
-3. Validates completion through actual model performance
-4. Unlocks new techniques and model types
+The engine is track-agnostic and handles:
+- **base.py**: Mission framework (Mission, MissionInfo, Checkpoint classes)
+- **state.py**: Player progress, XP, tier tracking (saves to `~/.claude-foundry/`)
+- **tiers.py**: Tier definitions (Apprentice → Journeyman → Artisan → Master)
+- **runner.py**: Mission execution, validation, workspace management
 
-### ART Models Used
-- `ART1`: Binary pattern recognition (beginner)
-- `FuzzyART`: Continuous data clustering (intermediate)
-- `ARTMAP`: Supervised classification (advanced)
-- `TopoART`: Topology-preserving learning (master)
+### Tracks (`foundry/tracks/`)
 
-## Tech Stack
-- Python 3.x with PyTorch (GPU-accelerated)
-- artlib (AdaptiveResonanceLib) for ART implementations
-- Rich for terminal UI
-- Click for CLI commands
+Tracks register themselves and their missions. Each track is self-contained:
+- Registers via `register_track()` in `__init__.py`
+- Contains missions under `missions/` subdirectory
+- Missions use `@register_mission` decorator
+
+### Current Track: ART Neural Networks
+
+Located at `foundry/tracks/art_neural_networks/`. Uses:
+- `torch` for GPU-accelerated tensors
+- `artlib` (AdaptiveResonanceLib) for ART implementations
+- `numpy` for data handling
 
 ## Project Structure
+
 ```
-neural_foundry/
-├── __init__.py
-├── cli.py              # Main CLI entry point
-├── game/
-│   ├── __init__.py
-│   ├── state.py        # Player progress, saves
-│   ├── tiers.py        # Tier definitions
-│   └── missions.py     # Mission framework
-├── missions/           # Individual mission modules
-│   ├── __init__.py
-│   └── apprentice/
-├── models/             # ART model wrappers
-│   └── __init__.py
-└── ui/                 # Terminal UI components
-    └── __init__.py
+foundry/
+├── __init__.py          # Package version
+├── __main__.py          # python -m foundry entry
+├── cli.py               # CLI commands (nf)
+├── engine/
+│   ├── __init__.py      # Engine exports
+│   ├── base.py          # Mission framework
+│   ├── state.py         # Player state
+│   ├── tiers.py         # Tier system
+│   └── runner.py        # Mission runner
+├── tracks/
+│   ├── __init__.py      # Track imports
+│   └── art_neural_networks/
+│       ├── __init__.py  # Track registration
+│       └── missions/
+│           ├── __init__.py
+│           ├── m01_first_resonance.py
+│           ├── m02_signal_noise.py
+│           └── m03_mappers_path.py
+└── ui/
+    ├── __init__.py
+    └── display.py       # Rich terminal UI
 ```
 
 ## Development Commands
+
 ```bash
 # Run the game
-python -m neural_foundry
+python -m foundry
+# or: nf (after pip install -e .)
 
-# Run tests
-pytest tests/
+# List tracks
+nf tracks
 
-# Quick ART model test
-python -c "from artlib import FuzzyART; print('OK')"
+# List missions
+nf missions
+
+# Start a mission
+nf play m01_first_resonance
+
+# Check progress
+nf check m01_first_resonance
 ```
+
+## Adding a New Track
+
+1. Create `foundry/tracks/your_track/`
+2. Add `__init__.py` with `register_track()` call
+3. Create `missions/` directory with mission files
+4. Import track in `foundry/tracks/__init__.py`
+
+See README.md for detailed track creation guide.
 
 ## Key Patterns
 
-### JIT Learning Philosophy
-Missions are designed around "just-in-time" learning - players learn Claude Code features exactly when they need them to solve the current challenge.
+### JIT Learning
+Missions teach Claude Code skills exactly when needed to solve the challenge.
 
-### Resonance Metaphor
-ART's "resonance" concept (pattern matching) parallels how Claude Code "resonates" with your intent when you provide good context.
+### Checkpoint Validation
+Each mission has checkpoints that verify:
+- File existence and content
+- Code patterns (imports, function calls)
+- Output files (results.json with metrics)

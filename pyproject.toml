@@ -1,28 +1,31 @@
 [project]
-name = "neural-foundry"
+name = "claude-foundry"
 version = "0.1.0"
-description = "Learn Claude Code through ART neural networks"
+description = "A gamified framework for mastering Claude Code through hands-on missions"
 requires-python = ">=3.10"
 dependencies = [
-    "torch>=2.0",
-    "artlib",
     "rich>=13.0",
     "click>=8.0",
 ]
 
 [project.optional-dependencies]
+art = [
+    "torch>=2.0",
+    "artlib",
+    "numpy",
+]
 dev = [
     "pytest>=7.0",
     "pytest-cov",
 ]
 
 [project.scripts]
-neural-foundry = "neural_foundry.cli:main"
-nf = "neural_foundry.cli:main"
+claude-foundry = "foundry.cli:main"
+nf = "foundry.cli:main"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["neural_foundry*"]
+include = ["foundry*"]

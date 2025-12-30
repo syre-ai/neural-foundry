@@ -1,28 +1,41 @@
-# Neural Foundry
+# Claude Foundry
 
-**Learn Claude Code through hands-on ART neural network missions.**
+**A gamified framework for mastering Claude Code through hands-on missions.**
 
-Neural Foundry is a CLI-based educational game that teaches effective Claude Code workflows by having players train and work with Adaptive Resonance Theory (ART) neural networks. Each mission introduces a real-world AI coding pattern while building actual machine learning models.
+Claude Foundry is an extensible CLI-based learning platform that teaches effective Claude Code workflows through practical challenges. Instead of reading documentation, you learn by doing—completing missions that naturally require the skills being taught.
 
 ## Philosophy
 
-Inspired by Andrej Karpathy's "JIT your work" philosophy, Neural Foundry teaches Claude Code skills exactly when you need them. Instead of reading documentation, you learn by doing—solving neural network challenges that naturally require the skills being taught.
+Inspired by Andrej Karpathy's "JIT your work" philosophy, Claude Foundry teaches skills exactly when you need them. The framework is built around **learning tracks**—themed collections of missions that teach Claude Code through domain-specific challenges.
 
-The game draws a parallel between ART's "resonance" concept (pattern matching through vigilance tuning) and how Claude Code "resonates" with your intent when you provide good context.
+## Architecture
 
-## Features
+```
+foundry/
+├── engine/              # Core game engine (track-agnostic)
+│   ├── base.py          # Mission framework
+│   ├── state.py         # Player progress & saves
+│   ├── tiers.py         # Tier progression system
+│   └── runner.py        # Mission execution
+├── tracks/              # Learning tracks (pluggable content)
+│   └── art_neural_networks/   # Example track: ART models
+│       └── missions/
+├── ui/                  # Terminal UI components
+└── cli.py               # Main CLI entry point
+```
 
-- **Tiered Progression**: Advance from Apprentice to Master as you complete missions
-- **Real ML Models**: Train actual ART neural networks using [AdaptiveResonanceLib](https://github.com/NiklasMelworWorton/AdaptiveResonanceLib)
-- **Practical Skills**: Each mission teaches a specific Claude Code workflow pattern
-- **GPU Accelerated**: Full PyTorch support for GPU-accelerated training
+### Core Concepts
+
+- **Tracks**: Themed collections of missions (e.g., ART Neural Networks, Web Development, Data Analysis)
+- **Missions**: Individual challenges that teach specific Claude Code skills
+- **Checkpoints**: Validation points within each mission
+- **Tiers**: Progression levels (Apprentice → Journeyman → Artisan → Master)
 
 ## Installation
 
 ### Prerequisites
 
 - Python 3.10+
-- CUDA-capable GPU (recommended)
 - [Claude Code CLI](https://claude.ai/claude-code)
 
 ### Setup
@@ -35,9 +48,8 @@ cd neural-foundry
 # Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
-# or: .venv\Scripts\activate  # Windows
 
-# Install dependencies
+# Install in development mode
 pip install -e .
 
 # Verify installation
@@ -47,142 +59,174 @@ nf --version
 ## Quick Start
 
 ```bash
-# Start the game
+# See welcome screen
 nf
 
-# View your progress
-nf status
+# List available tracks
+nf tracks
 
-# List available missions
+# List missions (optionally filter by track)
 nf missions
+nf missions --track art_neural_networks
 
 # Start a mission
 nf play m01_first_resonance
 
-# Check mission progress
+# Check your progress
 nf check m01_first_resonance
 
-# Complete a mission
+# Complete and earn XP
 nf complete m01_first_resonance
 ```
 
-## Missions
+## Available Tracks
 
-### Apprentice Tier
+### ART Neural Networks
 
-| Mission | Title | ART Model | Claude Code Skill | XP |
-|---------|-------|-----------|-------------------|-----|
-| M01 | First Resonance | ART1 | File reading & exploration | 100 |
-| M02 | Signal in the Noise | FuzzyART | Iterative editing (edit→test→refine) | 150 |
-| M03 | The Mapper's Path | SimpleARTMAP | Code generation | 200 |
-| M04 | *Coming Soon* | — | — | — |
-| M05 | *Coming Soon* | — | — | — |
+Learn Claude Code through Adaptive Resonance Theory models. Requires: `torch`, `artlib`, `numpy`
 
-### Future Tiers
+| Mission | Title | Claude Code Skill | Track Skill | XP |
+|---------|-------|-------------------|-------------|-----|
+| M01 | First Resonance | File reading | ART1 | 100 |
+| M02 | Signal in the Noise | Iterative editing | FuzzyART | 150 |
+| M03 | The Mapper's Path | Code generation | SimpleARTMAP | 200 |
 
-- **Journeyman**: Multi-file workflows, advanced clustering
-- **Artisan**: Test-driven development, architecture decisions
-- **Master**: System design, performance optimization
+## Creating Your Own Track
 
-## Project Structure
+Tracks are self-contained packages under `foundry/tracks/`. Each track registers itself and its missions.
+
+### 1. Create Track Directory
 
 ```
-neural-foundry/
-├── neural_foundry/
-│   ├── cli.py                 # Main CLI entry point
-│   ├── game/
-│   │   ├── state.py           # Player progress & saves
-│   │   ├── tiers.py           # Tier definitions
-│   │   └── runner.py          # Mission execution engine
-│   ├── missions/
-│   │   ├── base.py            # Mission framework
-│   │   └── apprentice/        # Apprentice tier missions
-│   │       ├── m01_first_resonance/
-│   │       ├── m02_signal_noise/
-│   │       └── m03_mappers_path/
-│   ├── models/                # ART model wrappers
-│   └── ui/                    # Terminal UI components
-├── docs/
-│   └── devlog/                # Development session logs
-├── tests/
-├── pyproject.toml
-├── CLAUDE.md                  # Claude Code context file
-└── README.md
+foundry/tracks/your_track/
+├── __init__.py         # Track registration
+└── missions/
+    ├── __init__.py     # Mission imports
+    └── m01_example.py  # Mission implementation
 ```
 
-## How It Works
+### 2. Register the Track
 
-1. **Start a Mission**: Each mission creates a workspace at `~/.neural_foundry/workspace/<mission_id>/`
-2. **Read the Briefing**: Understand the neural network challenge and objectives
-3. **Use Claude Code**: Work alongside Claude to explore data, write code, and train models
-4. **Validate Progress**: Run `nf check <mission_id>` to verify checkpoints
-5. **Complete & Advance**: Earn XP and unlock new missions and tiers
+```python
+# foundry/tracks/your_track/__init__.py
+from foundry.engine.base import register_track
 
-## ART Neural Networks
+register_track(
+    track_id="your_track",
+    name="Your Track Name",
+    description="What this track teaches",
+    requirements=["dependency1", "dependency2"],
+)
 
-Neural Foundry uses Adaptive Resonance Theory (ART) models—a family of neural networks known for:
-
-- **Stability-Plasticity Balance**: Learn new patterns without forgetting old ones
-- **Online Learning**: No need to retrain from scratch
-- **Interpretable Clusters**: Understand what the model learned
-
-Models used in the game:
-
-| Model | Type | Use Case |
-|-------|------|----------|
-| ART1 | Unsupervised | Binary pattern recognition |
-| FuzzyART | Unsupervised | Continuous data clustering |
-| SimpleARTMAP | Supervised | Classification with discrete labels |
-| ARTMAP | Supervised | Complex input-output mappings |
-
-## Development
-
-### Running Tests
-
-```bash
-pytest tests/
+from foundry.tracks.your_track.missions import m01_example
 ```
 
-### Development Logs
+### 3. Create a Mission
 
-Detailed session logs are maintained in `docs/devlog/`. These capture design decisions, experiments, and learnings from each development session.
+```python
+# foundry/tracks/your_track/missions/m01_example.py
+from pathlib import Path
+from foundry.engine.tiers import Tier
+from foundry.engine.base import (
+    Mission, MissionInfo, Checkpoint, CheckpointStatus, register_mission
+)
 
-### Adding New Missions
+MISSION_INFO = MissionInfo(
+    id="m01_your_mission",
+    title="Your Mission",
+    tier=Tier.APPRENTICE,
+    description="What players will learn",
+    story="The narrative context",
+    xp_reward=100,
+    claude_skills=["File reading", "Exploration"],
+    track="your_track",
+    track_skills=["SpecificTool"],
+)
 
-1. Create a new directory under `neural_foundry/missions/<tier>/`
-2. Implement the `Mission` base class
-3. Register the mission in `neural_foundry/missions/__init__.py`
-4. Test with `nf play <mission_id>`
+@register_mission
+class YourMission(Mission):
+    info = MISSION_INFO
+
+    def __init__(self):
+        self.workspace = None
+        self._checkpoints = [
+            Checkpoint(
+                id="step1",
+                title="First Step",
+                description="What to do",
+                hint="How to do it",
+                status=CheckpointStatus.AVAILABLE,
+            ),
+        ]
+
+    def setup(self, workspace: Path) -> None:
+        """Create workspace files."""
+        self.workspace = workspace
+        workspace.mkdir(parents=True, exist_ok=True)
+        # Create mission files here
+
+    def get_checkpoints(self) -> list[Checkpoint]:
+        return self._checkpoints
+
+    def validate_checkpoint(self, checkpoint_id: str) -> tuple[bool, str]:
+        """Check if checkpoint is complete."""
+        # Implement validation logic
+        return False, "Not implemented"
+
+    def get_instructions(self) -> str:
+        return "Mission instructions in markdown"
+```
+
+### 4. Register in tracks/__init__.py
+
+```python
+# foundry/tracks/__init__.py
+from foundry.tracks import your_track
+```
+
+## How Missions Work
+
+1. **Start**: `nf play <mission_id>` creates a workspace at `~/.claude-foundry/workspace/<mission_id>/`
+2. **Read**: Open `MISSION.md` for objectives and hints
+3. **Work**: Use Claude Code to complete the challenge
+4. **Validate**: Run `nf check <mission_id>` to verify progress
+5. **Complete**: Earn XP and unlock new missions
+
+## Tier System
+
+| Tier | Description | XP Required |
+|------|-------------|-------------|
+| Apprentice | Learning fundamentals | 0 |
+| Journeyman | Multi-step workflows | 500 |
+| Artisan | Complex integrations | 1500 |
+| Master | Advanced patterns | 3000 |
 
 ## Tech Stack
 
 - **Python 3.10+** with type hints
-- **PyTorch** for GPU-accelerated tensor operations
-- **[artlib](https://github.com/NiklasMelworWorton/AdaptiveResonanceLib)** for ART implementations
 - **[Rich](https://rich.readthedocs.io/)** for terminal UI
 - **[Click](https://click.palletsprojects.com/)** for CLI framework
 
-## Status
+## Project Status
 
-🚧 **Active Development** — Apprentice tier missions in progress.
+The framework is functional with one complete track (ART Neural Networks). The architecture supports adding unlimited custom tracks.
 
-- [x] Core game engine
+- [x] Core engine
 - [x] Mission framework
-- [x] 3/5 Apprentice missions
-- [ ] Journeyman tier
-- [ ] Artisan tier
-- [ ] Master tier
+- [x] Tier progression
+- [x] Track system
+- [x] ART Neural Networks track (3 missions)
+- [ ] Additional tracks
+- [ ] Community track support
+
+## Contributing
+
+Want to add a track? Follow the "Creating Your Own Track" guide above. PRs welcome!
 
 ## License
 
 MIT License — See [LICENSE](LICENSE) for details.
 
-## Acknowledgments
-
-- [AdaptiveResonanceLib](https://github.com/NiklasMelworWorton/AdaptiveResonanceLib) for ART implementations
-- [Claude Code](https://claude.ai/claude-code) for AI-assisted development
-- Andrej Karpathy for the "JIT your work" philosophy
-
 ---
 
-*Built with Claude Code* 🤖
+*Built with Claude Code*
